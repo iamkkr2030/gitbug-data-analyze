@@ -1,0 +1,10 @@
+{
+  "batch_id": "1bcfeb4316b01533b87988b9dc3eeed9",
+  "skipped": true,
+  "status": "SUCCESS",
+  "output_rows": 1034,
+  "issue_count": 1068,
+  "directed_relation_count": 1034,
+  "undirected_relation_count": 560,
+  "reciprocal_pair_count": 474
+}

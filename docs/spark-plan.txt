@@ -1,0 +1,142 @@
+== Parsed Logical Plan ==
+Deduplicate [issue_id#23L, duplicate_id#27L]
++- Project [issue_id#23L, duplicate_id#27L]
+   +- Filter isnull(reason#32)
+      +- Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+         +- Project [issue_raw#14, duplicate_raw#20, issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+            +- Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L]
+               +- Project [issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                  +- Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, duplicate_raw#16]
+                     +- Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), false, [duplicate_raw#16]
+                        +- Relation [Issue id#0,Duplicate id#1] csv
+
+== Analyzed Logical Plan ==
+issue_id: bigint, duplicate_id: bigint
+Deduplicate [issue_id#23L, duplicate_id#27L]
++- Project [issue_id#23L, duplicate_id#27L]
+   +- Filter isnull(reason#32)
+      +- Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+         +- Project [issue_raw#14, duplicate_raw#20, issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+            +- Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L]
+               +- Project [issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                  +- Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, duplicate_raw#16]
+                     +- Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), false, [duplicate_raw#16]
+                        +- Relation [Issue id#0,Duplicate id#1] csv
+
+== Optimized Logical Plan ==
+InMemoryRelation [issue_id#23L, duplicate_id#27L], StorageLevel(disk, memory, deserialized, 1 replicas)
+   +- AdaptiveSparkPlan isFinalPlan=true
+      +- == Final Plan ==
+         *(2) HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+         +- ShuffleQueryStage 1
+            +- Exchange hashpartitioning(issue_id#23L, duplicate_id#27L, 4), ENSURE_REQUIREMENTS, [plan_id=415]
+               +- *(1) HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+                  +- *(1) Project [issue_id#23L, duplicate_id#27L]
+                     +- *(1) Filter isnull(reason#32)
+                        +- TableCacheQueryStage 0
+                           +- InMemoryTableScan [duplicate_id#27L, issue_id#23L, reason#32], [isnull(reason#32)]
+                                 +- InMemoryRelation [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, reason#32], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                       +- AdaptiveSparkPlan isFinalPlan=true
+                                 +- == Final Plan ==
+                                    *(1) Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                                    +- *(1) Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                       +- *(1) Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                          +- *(1) Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                             +- TableCacheQueryStage 0
+                                                +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                                      +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                            +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+                                 +- == Initial Plan ==
+                                    Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                                    +- Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                       +- Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                          +- Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                             +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                                   +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                         +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+      +- == Initial Plan ==
+         HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+         +- Exchange hashpartitioning(issue_id#23L, duplicate_id#27L, 4), ENSURE_REQUIREMENTS, [plan_id=38]
+            +- HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+               +- Project [issue_id#23L, duplicate_id#27L]
+                  +- Filter isnull(reason#32)
+                     +- InMemoryTableScan [duplicate_id#27L, issue_id#23L, reason#32], [isnull(reason#32)]
+                           +- InMemoryRelation [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, reason#32], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                 +- AdaptiveSparkPlan isFinalPlan=true
+                           +- == Final Plan ==
+                              *(1) Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                              +- *(1) Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                 +- *(1) Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                    +- *(1) Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                       +- TableCacheQueryStage 0
+                                          +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                                +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                      +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+                           +- == Initial Plan ==
+                              Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                              +- Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                 +- Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                    +- Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                       +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                             +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                   +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- InMemoryTableScan [issue_id#23L, duplicate_id#27L]
+      +- InMemoryRelation [issue_id#23L, duplicate_id#27L], StorageLevel(disk, memory, deserialized, 1 replicas)
+            +- AdaptiveSparkPlan isFinalPlan=true
+               +- == Final Plan ==
+                  *(2) HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+                  +- ShuffleQueryStage 1
+                     +- Exchange hashpartitioning(issue_id#23L, duplicate_id#27L, 4), ENSURE_REQUIREMENTS, [plan_id=415]
+                        +- *(1) HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+                           +- *(1) Project [issue_id#23L, duplicate_id#27L]
+                              +- *(1) Filter isnull(reason#32)
+                                 +- TableCacheQueryStage 0
+                                    +- InMemoryTableScan [duplicate_id#27L, issue_id#23L, reason#32], [isnull(reason#32)]
+                                          +- InMemoryRelation [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, reason#32], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                +- AdaptiveSparkPlan isFinalPlan=true
+                                 +- == Final Plan ==
+                                    *(1) Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                                    +- *(1) Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                       +- *(1) Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                          +- *(1) Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                             +- TableCacheQueryStage 0
+                                                +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                                      +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                            +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+                                 +- == Initial Plan ==
+                                    Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                                    +- Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                       +- Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                          +- Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                             +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                                   +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                         +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+               +- == Initial Plan ==
+                  HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+                  +- Exchange hashpartitioning(issue_id#23L, duplicate_id#27L, 4), ENSURE_REQUIREMENTS, [plan_id=38]
+                     +- HashAggregate(keys=[issue_id#23L, duplicate_id#27L], functions=[], output=[issue_id#23L, duplicate_id#27L])
+                        +- Project [issue_id#23L, duplicate_id#27L]
+                           +- Filter isnull(reason#32)
+                              +- InMemoryTableScan [duplicate_id#27L, issue_id#23L, reason#32], [isnull(reason#32)]
+                                    +- InMemoryRelation [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, reason#32], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                          +- AdaptiveSparkPlan isFinalPlan=true
+                           +- == Final Plan ==
+                              *(1) Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                              +- *(1) Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                 +- *(1) Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                    +- *(1) Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                       +- TableCacheQueryStage 0
+                                          +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                                +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                      +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>
+                           +- == Initial Plan ==
+                              Project [issue_raw#14, duplicate_raw#20, issue_id#23L, duplicate_id#27L, CASE WHEN (isnull(issue_id#23L) OR isnull(duplicate_id#27L)) THEN invalid_id WHEN (issue_id#23L = duplicate_id#27L) THEN self_reference END AS reason#32]
+                              +- Project [issue_raw#14, duplicate_raw#20, CASE WHEN ((RLIKE(issue_raw#14, ^[0-9]+$) AND (length(regexp_replace(issue_raw#14, ^0+, , 1)) > 0)) AND ((length(regexp_replace(issue_raw#14, ^0+, , 1)) < 19) OR ((length(regexp_replace(issue_raw#14, ^0+, , 1)) = 19) AND (regexp_replace(issue_raw#14, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(issue_raw#14, ^0+, , 1) as bigint) END AS issue_id#23L, CASE WHEN ((RLIKE(duplicate_raw#20, ^[0-9]+$) AND (length(regexp_replace(duplicate_raw#20, ^0+, , 1)) > 0)) AND ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) < 19) OR ((length(regexp_replace(duplicate_raw#20, ^0+, , 1)) = 19) AND (regexp_replace(duplicate_raw#20, ^0+, , 1) <= 9223372036854775807)))) THEN cast(regexp_replace(duplicate_raw#20, ^0+, , 1) as bigint) END AS duplicate_id#27L]
+                                 +- Project [regexp_replace(coalesce(Issue id#0, ), (?U)^\s+|\s+$, , 1) AS issue_raw#14, regexp_replace(duplicate_raw#16, (?U)^\s+|\s+$, , 1) AS duplicate_raw#20]
+                                    +- Generate explode(split(coalesce(Duplicate id#1, ), ,, -1)), [Issue id#0], false, [duplicate_raw#16]
+                                       +- InMemoryTableScan [Issue id#0, Duplicate id#1]
+                                             +- InMemoryRelation [Issue id#0, Duplicate id#1], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                                   +- FileScan csv [Issue id#0,Duplicate id#1] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/opt/gitbugs/data/batches/1bcfeb4316b01533b87988b9dc3eeed9/raw/so..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Issue id:string,Duplicate id:string>

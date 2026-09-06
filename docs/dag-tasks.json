@@ -1,0 +1,66 @@
+[
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "normalize_with_spark",
+    "state": "success",
+    "start_date": "2026-09-06T11:42:54.360085+00:00",
+    "end_date": "2026-09-06T11:43:09.887690+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "inspect_source",
+    "state": "success",
+    "start_date": "2026-09-06T11:42:51.086089+00:00",
+    "end_date": "2026-09-06T11:42:51.358096+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "register_batch",
+    "state": "success",
+    "start_date": "2026-09-06T11:42:52.172506+00:00",
+    "end_date": "2026-09-06T11:42:52.486881+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "archive_raw",
+    "state": "success",
+    "start_date": "2026-09-06T11:42:53.281963+00:00",
+    "end_date": "2026-09-06T11:42:53.592095+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "validate_silver",
+    "state": "success",
+    "start_date": "2026-09-06T11:43:11.177452+00:00",
+    "end_date": "2026-09-06T11:43:11.413654+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "load_staging",
+    "state": "success",
+    "start_date": "2026-09-06T11:43:12.278863+00:00",
+    "end_date": "2026-09-06T11:43:20.446789+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "verify_publish",
+    "state": "success",
+    "start_date": "2026-09-06T11:43:22.344641+00:00",
+    "end_date": "2026-09-06T11:43:22.606944+00:00"
+  },
+  {
+    "dag_id": "gitbugs_batch_pipeline",
+    "execution_date": "2026-09-06T11:42:50+00:00",
+    "task_id": "publish_snapshot",
+    "state": "success",
+    "start_date": "2026-09-06T11:43:21.287977+00:00",
+    "end_date": "2026-09-06T11:43:21.665096+00:00"
+  }
+]

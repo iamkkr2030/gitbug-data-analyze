@@ -1,0 +1,244 @@
+{
+  "synthetic": true,
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+  "spark_startup_seconds": 3.225783903999968,
+  "results": [
+    {
+      "batch_id": "synthetic-1000",
+      "source_sha256": "9d3d41c00a0333fba5afb17fc201ea16c95ef2b98a4f122ebf892b6cb4f43755",
+      "transform_version": "benchmark-v1",
+      "engine": "spark",
+      "spark_version": "3.5.6",
+      "input_rows": 1000,
+      "expanded_rows": 2000,
+      "quarantined_rows": 0,
+      "duplicates_removed": 1000,
+      "output_rows": 1000,
+      "issue_count": 1001,
+      "undirected_relation_count": 1000,
+      "reciprocal_pair_count": 0,
+      "transform_seconds": 9.6059,
+      "top_issues": [
+        {
+          "issue_id": 2,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 3,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 4,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 5,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 6,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 7,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 8,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 9,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 10,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 11,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        }
+      ],
+      "rows_per_second": 104.10268689034864
+    },
+    {
+      "batch_id": "synthetic-10000",
+      "source_sha256": "d32c5c65064891536e6d42a6e1429310c8dc0898e3ab8a7b9b0ba75fc7b4c9a0",
+      "transform_version": "benchmark-v1",
+      "engine": "spark",
+      "spark_version": "3.5.6",
+      "input_rows": 10000,
+      "expanded_rows": 20000,
+      "quarantined_rows": 0,
+      "duplicates_removed": 10000,
+      "output_rows": 10000,
+      "issue_count": 10001,
+      "undirected_relation_count": 10000,
+      "reciprocal_pair_count": 0,
+      "transform_seconds": 4.5809,
+      "top_issues": [
+        {
+          "issue_id": 2,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 3,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 4,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 5,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 6,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 7,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 8,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 9,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 10,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 11,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        }
+      ],
+      "rows_per_second": 2182.9771442293
+    },
+    {
+      "batch_id": "synthetic-100000",
+      "source_sha256": "b7ac98580f6b620d825f97993e17dc5c13c6c458341cf0a34be4720291df914b",
+      "transform_version": "benchmark-v1",
+      "engine": "spark",
+      "spark_version": "3.5.6",
+      "input_rows": 100000,
+      "expanded_rows": 200000,
+      "quarantined_rows": 0,
+      "duplicates_removed": 100000,
+      "output_rows": 100000,
+      "issue_count": 100001,
+      "undirected_relation_count": 100000,
+      "reciprocal_pair_count": 0,
+      "transform_seconds": 6.3232,
+      "top_issues": [
+        {
+          "issue_id": 2,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 3,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 4,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 5,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 6,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 7,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 8,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 9,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 10,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        },
+        {
+          "issue_id": 11,
+          "in_degree": 1,
+          "out_degree": 1,
+          "neighbor_count": 2
+        }
+      ],
+      "rows_per_second": 15814.777327935222
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "source_path": "C:\\project\\gitbug data analyze\\gitbugs_full_data.csv",
+  "source_sha256": "3c8ab5825fd0eb26a44abde9221e01ac90ce8ca60650be8833be2dd377d0e4d7",
+  "input_rows": 1021,
+  "source_bytes": 19674,
+  "multi_id_rows": 21,
+  "expanded_rows": 1042,
+  "quarantined_rows": 0,
+  "duplicates_removed": 8,
+  "output_rows": 1034,
+  "issue_count": 1068,
+  "undirected_relation_count": 560,
+  "reciprocal_pair_count": 474,
+  "reciprocal_pair_ratio": 0.8464285714285714,
+  "top_issues": [
+    {
+      "issue_id": 13363492,
+      "in_degree": 1,
+      "out_degree": 2,
+      "neighbor_count": 3
+    },
+    {
+      "issue_id": 13290844,
+      "in_degree": 1,
+      "out_degree": 2,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13315797,
+      "in_degree": 1,
+      "out_degree": 1,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13327984,
+      "in_degree": 1,
+      "out_degree": 1,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13339673,
+      "in_degree": 1,
+      "out_degree": 1,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13342319,
+      "in_degree": 1,
+      "out_degree": 1,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13351881,
+      "in_degree": 1,
+      "out_degree": 2,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13352724,
+      "in_degree": 1,
+      "out_degree": 1,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13354065,
+      "in_degree": 1,
+      "out_degree": 2,
+      "neighbor_count": 2
+    },
+    {
+      "issue_id": 13362678,
+      "in_degree": 1,
+      "out_degree": 1,
+      "neighbor_count": 2
+    }
+  ],
+  "quarantine_sample": []
+}
